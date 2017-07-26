@@ -21,8 +21,6 @@ class App extends Component {
   }
 }
 
-
-
 const TopNavigation = () => (
   <Navbar>
     <Navbar.Header>

@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Table, } from 'react-bootstrap'
+import axios from 'axios'
 
 import NewExtractionForm from './newextractionform.jsx'
 
@@ -25,8 +26,32 @@ const extractionList = [
 ];
 
 class ExtractionsTable extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      data: "",
+      isDataLoaded: false,
+    };
+  }
+
+  componentDidMount(){
+    axios.get('http://localhost:3000/extractions/')
+      .then((response) => {
+        this.setState({data: response.data});
+        this.setState({isDataLoaded: true});
+        //console.log(response);
+        //console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
     render(){
         const { extractionList, } = this.props
+
+        console.log(this.state.data);
 
         return (
           <div style={{ width: "60%", paddingLeft: "17%"}}>
@@ -39,13 +64,13 @@ class ExtractionsTable extends Component {
                 </tr>
               </thead>
               <tbody>
-                { extractionList.map(item =>
-                    <tr key={item.objectID}>
-                        <td>{item.name}</td>
-                        <td>{item.grinder}</td>
-                        <td>{item.extraction_time}</td>
+                { this.state.isDataLoaded ? this.state.data.map(item =>
+                    <tr key={item._id}>
+                        <td>{item.Coffee}</td>
+                        <td>{item.Grinder}</td>
+                        <td>{item.ExtractionTime}</td>
                     </tr>
-                )}
+                ) : ''}
               </tbody>
             </Table>
           </div>

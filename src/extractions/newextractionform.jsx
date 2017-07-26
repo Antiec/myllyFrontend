@@ -22,7 +22,7 @@ class NewExtractionForm extends Component {
 
     axios.post('http://localhost:3000/extractions', {
       Coffee: this.state.Coffee,
-      CoffeeGrinder: this.state.CoffeeGrinder,
+      Grinder: this.state.Grinder,
       ExtractionTime: this.state.ExtractionTime,
     }, {headers:{'Access-Control-Allow-Origin': '*'}, })
       .then(function (response) {
