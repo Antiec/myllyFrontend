@@ -36,7 +36,7 @@ class ExtractionsTable extends Component {
   }
 
   componentDidMount(){
-    axios.get('http://localhost:3000/extractions/')
+    axios.get('http://localhost:3000/api/extractions/')
       .then((response) => {
         this.setState({data: response.data});
         this.setState({isDataLoaded: true});
@@ -63,12 +63,12 @@ class ExtractionsTable extends Component {
                   <th>Extraction time</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="extractionsBody">
                 { this.state.isDataLoaded ? this.state.data.map(item =>
                     <tr key={item._id}>
-                        <td>{item.Coffee}</td>
-                        <td>{item.Grinder}</td>
-                        <td>{item.ExtractionTime}</td>
+                        <td>{item.coffee}</td>
+                        <td>{item.grinder}</td>
+                        <td>{item.extractionTime}</td>
                     </tr>
                 ) : ''}
               </tbody>
@@ -90,7 +90,7 @@ class Extractions extends Component {
       return (
         <div id="extractions">
           <br/>
-          <NewExtractionForm/>
+          <NewExtractionForm />
           <ExtractionsTable extractionList={extractionList} />
         </div>
       )

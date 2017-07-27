@@ -4,6 +4,7 @@ import { Nav, Navbar, NavItem } from 'react-bootstrap';
 import { IndexLinkContainer } from 'react-router-bootstrap';
 import Extractions from '../extractions/extractions';
 import Coffees from '../coffees/coffees';
+import Grinder from '../grinder/grinder';
 
 class App extends Component {
   render() {
@@ -13,6 +14,7 @@ class App extends Component {
           <Switch>
             <Route exact path='/' component={Extractions} />
             <Route path='/coffees' component={Coffees} />
+            <Route path='/grinder' component={Grinder} />
             <Route component={NotFound} />
           </Switch>
         </Container>
@@ -34,6 +36,9 @@ const TopNavigation = () => (
       </IndexLinkContainer>
       <IndexLinkContainer to="/coffees">
         <NavItem eventKey={2}>Coffees</NavItem>
+      </IndexLinkContainer>
+      <IndexLinkContainer to="/Grinder">
+        <NavItem eventKey={2}>Grinder settings</NavItem>
       </IndexLinkContainer>
     </Nav>
   </Navbar>
