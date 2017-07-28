@@ -67,30 +67,11 @@ class ExtractionsTable extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      data: "",
-      isDataLoaded: false,
-      detailed: false,
-    };
-
   }
-
-  componentDidMount(){
-    axios.get('http://localhost:3000/api/extractions/')
-      .then((response) => {
-        this.setState({data: response.data});
-        this.setState({isDataLoaded: true});
-        //console.log(response);
-        //console.log(response);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  };
 
 
     render(){
-        const { extractionList, } = this.props
+        const { data} = this.props
 
         return (
           <div style={{ width: "60%", paddingLeft: "17%"}}>
@@ -103,9 +84,8 @@ class ExtractionsTable extends Component {
                   <th style={{width: "40%"}}>Grade</th>
                 </tr>
               </thead>
-              { this.state.isDataLoaded ? this.state.data.map(item =>
-                <ExtractionsRow key={item._id} item={item}/>)
-                : <tbody><tr><td>Loading</td></tr></tbody>}
+              { data.map(item =>
+                <ExtractionsRow key={item._id} item={item}/>) }
             </Table>
           </div>
         )
@@ -116,16 +96,34 @@ class Extractions extends Component {
   constructor(props) {
       super(props)
 
-      this.state = { extractionList, }
+    this.state = {
+      data: "",
+      isDataLoaded: false,
+    };
   }
 
+  componentDidMount(){
+    axios.get('http://localhost:3000/api/extractions/')
+      .then((response) => {
+        this.setState({data: response.data, isDataLoaded: true});
+        console.log(this.state.data, this.state.isDataLoaded, );
+        //console.log(response);
+        //console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
   render() {
-      const { extractionList, } = this.state
+      const { data, isDataLoaded} = this.state
       return (
         <div id="extractions">
           <br/>
-          <NewExtractionForm />
-          <ExtractionsTable extractionList={extractionList} />
+          { isDataLoaded &&
+          <NewExtractionForm firstResult={data[data.length - 1]}/> }
+          { isDataLoaded &&
+          <ExtractionsTable data={data} /> }
         </div>
       )
   }
