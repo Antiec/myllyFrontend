@@ -97,15 +97,15 @@ class ExtractionsTable extends Component {
             <Table striped condensed bordered hover>
               <thead>
                 <tr>
-                  <th>Coffee Name</th>
-                  <th>Grinder</th>
-                  <th>Time</th>
-                  <th>Grade</th>
+                  <th style={{width: "25%"}}>Coffee Name</th>
+                  <th style={{width: "10%"}}>Grinder</th>
+                  <th style={{width: "10%"}}>Time</th>
+                  <th style={{width: "40%"}}>Grade</th>
                 </tr>
               </thead>
               { this.state.isDataLoaded ? this.state.data.map(item =>
-                <ExtractionsRow key={item._id} item={item}/>
-              ) : ''}
+                <ExtractionsRow key={item._id} item={item}/>)
+                : <tbody><tr><td>Loading</td></tr></tbody>}
             </Table>
           </div>
         )
