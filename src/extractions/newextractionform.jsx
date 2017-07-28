@@ -89,11 +89,11 @@ class NewExtractionForm extends Component {
                 <Col componentClass={ControlLabel} sm={2}>
                   {item.placeHolder}:
                 </Col>
-                <Col sm={ item.objectID === 'roastDate' ? 2 : 3 }>
+                <Col sm={ item.objectID === 'roastDate' || item.objectID === 'grinder' ? 2 : 3 }>
                   <FormControl type={item.type} name={item.objectID} value={this.state[item.objectID]} onChange={this.handleChange} placeholder={item.placeHolder}/>
                 </Col>
-                { item.objectID === "grinder" ? <Button onClick={this.handleGrinderMove}>Move</Button> : '' }
-                { item.objectID === 'roastDate' ? <Col componentClass={ControlLabel} sm={2}>{moment(this.state.roastDate, "YYYY-MM-DD").fromNow('dd')} old</Col> : '' }
+                { item.objectID === 'roastDate' && <Col componentClass={ControlLabel} sm={0}>{moment(this.state.roastDate, "YYYY-MM-DD").fromNow('dd')} old</Col> }
+                { item.objectID === "grinder" && <Button onClick={this.handleGrinderMove}>Move</Button> }
               </FormGroup>
           )}
 
