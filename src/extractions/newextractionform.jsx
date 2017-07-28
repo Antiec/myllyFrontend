@@ -2,7 +2,7 @@ import React, { Component, fetch } from 'react'
 import axios from 'axios'
 import moment from 'moment'
 import { Form, FormGroup, FormControl,
-  Col, ControlLabel, Button, } from 'react-bootstrap'
+  Col, ControlLabel, Button, Panel, } from 'react-bootstrap'
 
 class NewExtractionForm extends Component {
   constructor(props) {
@@ -11,7 +11,7 @@ class NewExtractionForm extends Component {
       coffee: '',
       date: moment().format('YYYY-MM-DD'),
       grinder: '',
-      weight: 20.0,
+      dose: 20.0,
       extractionTime: '',
       grade: '',
       notes: '',
@@ -29,11 +29,15 @@ class NewExtractionForm extends Component {
   }
 
   handleSubmit(event) {
-
+    const s = this.state;
     axios.post('http://localhost:3000/api/extractions', {
-      coffee: this.state.coffee,
-      grinder: this.state.grinder,
-      extractionTime: this.state.extractionTime,
+      coffee: s.coffee,
+      date: s.date,
+      grinder: s.grinder,
+      dose: s.dose,
+      extractionTime: s.extractionTime,
+      grade: s.grade,
+      notes: s.notes,
     }, {headers:{'Access-Control-Allow-Origin': '*'}, })
       .then(function (response) {
         console.log(response);
@@ -64,7 +68,7 @@ class NewExtractionForm extends Component {
       { objectID: 'coffee', placeHolder: 'Coffee name', type: 'text'},
       { objectID: 'date', placeHolder:'Current Date', type: 'date'},
       { objectID: 'grinder', placeHolder:'Grinder setting', type: 'number'},
-      { objectID: 'weight', placeHolder:'Coffee weight', type: 'number'},
+      { objectID: 'dose', placeHolder:'Coffee dose', type: 'number'},
       { objectID: 'extractionTime', placeHolder: 'Extraction time', type: 'number'},
       { objectID: 'grade', placeHolder: 'Extraction grade', type: 'number'},
       { objectID: 'notes', placeHolder: 'Other notes', type: 'text'},
@@ -74,16 +78,16 @@ class NewExtractionForm extends Component {
       <div>
         <Form horizontal onSubmit={this.handleSubmit}>
           { inputs.map(item =>
-            <FormGroup controlId={item.objectID} key={item.objectID}>
-              <Col componentClass={ControlLabel} sm={2}>
-                {item.placeHolder}:
-              </Col>
-              <Col sm={ item.objectID === 'date' ? 2 : 3 }>
-                <FormControl type={item.type} name={item.objectID} value={this.state[item.objectID]} onChange={this.handleChange} placeholder={item.placeHolder}/>
-              </Col>
-              { item.objectID === "grinder" ? <Button onClick={this.handleGrinderMove}>Move</Button> : '' }
-              { item.objectID === 'date' ? <Col componentClass={ControlLabel} sm={2}>{moment("25072017", "DDMMYYYY").fromNow('dd')} old</Col> : '' }
-            </FormGroup>
+              <FormGroup controlId={item.objectID} key={item.objectID}>
+                <Col componentClass={ControlLabel} sm={2}>
+                  {item.placeHolder}:
+                </Col>
+                <Col sm={ item.objectID === 'date' ? 2 : 3 }>
+                  <FormControl type={item.type} name={item.objectID} value={this.state[item.objectID]} onChange={this.handleChange} placeholder={item.placeHolder}/>
+                </Col>
+                { item.objectID === "grinder" ? <Button onClick={this.handleGrinderMove}>Move</Button> : '' }
+                { item.objectID === 'date' ? <Col componentClass={ControlLabel} sm={2}>{moment("25072017", "DDMMYYYY").fromNow('dd')} old</Col> : '' }
+              </FormGroup>
           )}
 
           <FormGroup>

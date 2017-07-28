@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { Table, } from 'react-bootstrap'
+import { Table, Collapse, } from 'react-bootstrap'
 import axios from 'axios'
+import moment from 'moment'
 
 import NewExtractionForm from './newextractionform.jsx'
 
@@ -25,6 +26,43 @@ const extractionList = [
     },
 ];
 
+class ExtractionsRow extends Component{
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      detailed: false,
+    };
+
+    this.handleClick = this.handleClick.bind(this)
+  }
+
+  handleClick(){
+    this.setState({detailed: !this.state.detailed});
+  }
+
+  render(){
+    const { item } = this.props;
+    return (<tbody id="extractionsBody">
+        <tr onClick={() => this.handleClick()}>
+          <td>{item.coffee}</td>
+          <td>{item.grinder}</td>
+          <td>{item.extractionTime}</td>
+          <td>{item.grade}</td>
+        </tr>
+        <Collapse in={this.state.detailed}>
+          <tr>
+            <td>Date: {item.date}</td>
+            <td>Age: {moment("25072017", "DDMMYYYY").fromNow('dd')} old</td>
+            <td>Dose: {item.dose}</td>
+            <td>Notes: {item.notes}</td>
+          </tr>
+        </Collapse>
+      </tbody>)
+  }
+}
+
 class ExtractionsTable extends Component {
   constructor(props) {
     super(props);
@@ -32,7 +70,9 @@ class ExtractionsTable extends Component {
     this.state = {
       data: "",
       isDataLoaded: false,
+      detailed: false,
     };
+
   }
 
   componentDidMount(){
@@ -48,30 +88,24 @@ class ExtractionsTable extends Component {
       });
   };
 
+
     render(){
         const { extractionList, } = this.props
 
-        console.log(this.state.data);
-
         return (
           <div style={{ width: "60%", paddingLeft: "17%"}}>
-            <Table striped bordered condensed hover>
+            <Table striped condensed bordered hover>
               <thead>
                 <tr>
                   <th>Coffee Name</th>
-                  <th>Grinder setting</th>
-                  <th>Extraction time</th>
+                  <th>Grinder</th>
+                  <th>Time</th>
+                  <th>Grade</th>
                 </tr>
               </thead>
-              <tbody id="extractionsBody">
-                { this.state.isDataLoaded ? this.state.data.map(item =>
-                    <tr key={item._id}>
-                        <td>{item.coffee}</td>
-                        <td>{item.grinder}</td>
-                        <td>{item.extractionTime}</td>
-                    </tr>
-                ) : ''}
-              </tbody>
+              { this.state.isDataLoaded ? this.state.data.map(item =>
+                <ExtractionsRow key={item._id} item={item}/>
+              ) : ''}
             </Table>
           </div>
         )
