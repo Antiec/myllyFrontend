@@ -6,7 +6,7 @@ import { Form, FormGroup, FormControl,
 class GrinderForm extends Component {
   constructor(props) {
     super(props);
-    this.state = {grinder: '', };
+    this.state = {grinder: '', currentValue: 0};
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -19,7 +19,7 @@ class GrinderForm extends Component {
   }
 
   handleSubmit(event) {
-    axios.post('http://localhost:3000/api/grinder/set', {
+    axios.put('http://localhost:3000/api/grinder/set', {
       grinder: this.state.grinder,
     }, {headers:{'Access-Control-Allow-Origin': '*'}, })
       .then(function (response) {
@@ -31,6 +31,19 @@ class GrinderForm extends Component {
     //alert(`A name was submitted: ${this.state.Coffee}, ${this.state.CoffeeGrinder}, ${this.state.ExtractionTime}`);
     event.preventDefault();
   }
+
+  componentDidMount(){
+    axios.get('http://localhost:3000/api/grinder/')
+      .then((response) => {
+        this.setState({currentValue: response.data.currentValue, isDataLoaded: true});
+        console.log(this.state.data, this.state.isDataLoaded, );
+        //console.log(response);
+        //console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
 
   render() {
     const inputs = [
@@ -46,7 +59,7 @@ class GrinderForm extends Component {
                 {item.placeHolder}
               </Col>
               <Col sm={3}>
-                <FormControl type={item.type} name={item.objectID} value={this.state[item.objectID]} onChange={this.handleChange} placeholder={item.placeHolder}/>
+                <FormControl type={item.type} name={item.objectID} value={this.state[item.objectID]} onChange={this.handleChange} placeholder={this.state.currentValue}/>
               </Col>
             </FormGroup>
           )}

@@ -8,17 +8,30 @@ class NewExtractionForm extends Component {
   constructor(props) {
     super(props);
     const fr = this.props.firstResult;
-    this.state = {
-      coffee: fr.coffee,
-      roastDate: fr.roastDate,
-      extractionDate: moment().format('YYYY-MM-DD'),
-      grinder: fr.grinder,
-      dose: fr.dose,
-      extractionTime: fr.extractionTime,
-      grade: '',
-      notes: '',
-    };
-    console.log(fr.roastDate)
+    if( fr !== undefined) {
+      this.state = {
+        coffee: fr.coffee,
+        roastDate: fr.roastDate,
+        extractionDate: moment().format('YYYY-MM-DD'),
+        grinder: fr.grinder,
+        dose: fr.dose,
+        extractionTime: '',
+        grade: '',
+        notes: '',
+      };
+    } else {
+      this.state = {
+        coffee: '',
+        roastDate: '',
+        extractionDate: moment().format('YYYY-MM-DD'),
+        grinder: '',
+        dose: 20.5,
+        extractionTime: '',
+        grade: '',
+        notes: '',
+      };
+    }
+
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -54,7 +67,7 @@ class NewExtractionForm extends Component {
   }
 
   handleGrinderMove(event){
-    axios.post('http://localhost:3000/api/grinder/move', {
+    axios.put('http://localhost:3000/api/grinder/move', {
       grinder: this.state.grinder,
     }, {headers:{'Access-Control-Allow-Origin': '*'}, })
       .then(function (response) {
@@ -79,8 +92,6 @@ class NewExtractionForm extends Component {
       { objectID: 'notes', placeHolder: 'Other notes', type: 'text'},
     ];
 
-    console.log(moment(this.state.roastDate, "YYYY-MM-DD").fromNow('dd'));
-
     return (
       <div>
         <Form horizontal onSubmit={this.handleSubmit}>
@@ -89,10 +100,10 @@ class NewExtractionForm extends Component {
                 <Col componentClass={ControlLabel} sm={2}>
                   {item.placeHolder}:
                 </Col>
-                <Col sm={ item.objectID === 'roastDate' || item.objectID === 'grinder' ? 2 : 3 }>
+                <Col sm={ item.objectID === 'extracionDate' || item.objectID === 'grinder' ? 2 : 3 }>
                   <FormControl type={item.type} name={item.objectID} value={this.state[item.objectID]} onChange={this.handleChange} placeholder={item.placeHolder}/>
                 </Col>
-                { item.objectID === 'roastDate' && <Col componentClass={ControlLabel} sm={0}>{moment(this.state.roastDate, "YYYY-MM-DD").fromNow('dd')} old</Col> }
+                { item.objectID === 'extractionDate' && <Col componentClass={ControlLabel} sm={0}>{moment(this.state.roastDate, "YYYY-MM-DD").fromNow('dd')} old</Col> }
                 { item.objectID === "grinder" && <Button onClick={this.handleGrinderMove}>Move</Button> }
               </FormGroup>
           )}

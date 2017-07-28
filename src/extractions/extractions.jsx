@@ -53,8 +53,8 @@ class ExtractionsRow extends Component{
         </tr>
         <Collapse in={this.state.detailed}>
           <tr>
-            <td>Date: {item.date}</td>
-            <td>Age: {moment("25072017", "DDMMYYYY").fromNow('dd')} old</td>
+            <td>Roast Date:<br/> {item.roastDate}</td>
+            <td>Age: <br/>{moment("25072017", "DDMMYYYY").fromNow('dd')}</td>
             <td>Dose: {item.dose}</td>
             <td>Notes: {item.notes}</td>
           </tr>
