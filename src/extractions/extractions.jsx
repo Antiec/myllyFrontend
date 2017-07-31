@@ -49,6 +49,7 @@ class ExtractionsRow extends Component{
           <td>{item.coffee}</td>
           <td>{item.grinder}</td>
           <td>{item.extractionTime}</td>
+          <td>{item.weight}</td>
           <td>{item.grade}</td>
         </tr>
         <Collapse in={this.state.detailed}>
@@ -81,7 +82,8 @@ class ExtractionsTable extends Component {
                   <th style={{width: "25%"}}>Coffee Name</th>
                   <th style={{width: "10%"}}>Grinder</th>
                   <th style={{width: "10%"}}>Time</th>
-                  <th style={{width: "40%"}}>Grade</th>
+                  <th style={{width: "10%"}}>Weight</th>
+                  <th style={{width: "30%"}}>Grade</th>
                 </tr>
               </thead>
               { data.map(item =>
@@ -103,7 +105,8 @@ class Extractions extends Component {
   }
 
   componentDidMount(){
-    axios.get('http://localhost:3000/api/extractions/')
+
+    axios.get('http://192.168.10.48:3000/api/extractions/')
       .then((response) => {
         this.setState({data: response.data, isDataLoaded: true});
         console.log(this.state.data, this.state.isDataLoaded, );
@@ -122,8 +125,8 @@ class Extractions extends Component {
           <br/>
           { isDataLoaded &&
           <NewExtractionForm firstResult={data[data.length - 1]}/> }
-          { isDataLoaded &&
-          <ExtractionsTable data={data} /> }
+          { isDataLoaded ?
+          <ExtractionsTable data={data} /> : <p>Loading or no connection to DB!</p>}
         </div>
       )
   }

@@ -16,8 +16,10 @@ class NewExtractionForm extends Component {
         grinder: fr.grinder,
         dose: fr.dose,
         extractionTime: '',
+        weight: '',
         grade: '',
         notes: '',
+        isMobile: false,
       };
     } else {
       this.state = {
@@ -27,8 +29,10 @@ class NewExtractionForm extends Component {
         grinder: '',
         dose: 20.5,
         extractionTime: '',
+        weight: '',
         grade: '',
         notes: '',
+        isMobile: false,
       };
     }
 
@@ -36,6 +40,7 @@ class NewExtractionForm extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleGrinderMove = this.handleGrinderMove.bind(this);
+    this.updateDimensions = this.updateDimensions.bind(this);
   }
 
   handleChange(event) {
@@ -44,15 +49,24 @@ class NewExtractionForm extends Component {
     this.setState(change);
   }
 
+  updateDimensions(){
+    this.setState({isMobile: window.innerWidth <= 770 })
+  }
+
+  componentDidMount() {
+    window.addEventListener("resize", this.updateDimensions);
+  }
+
   handleSubmit(event) {
     const s = this.state;
-    axios.post('http://localhost:3000/api/extractions', {
+    axios.post('http://192.168.10.48:3000/api/extractions', {
       coffee: s.coffee,
       roastDate: s.roastDate,
       extractionDate: s.extractionDate,
       grinder: s.grinder,
       dose: s.dose,
       extractionTime: s.extractionTime,
+      weight: s.weight,
       grade: s.grade,
       notes: s.notes,
     }, {headers:{'Access-Control-Allow-Origin': '*'}, })
@@ -67,7 +81,7 @@ class NewExtractionForm extends Component {
   }
 
   handleGrinderMove(event){
-    axios.put('http://localhost:3000/api/grinder/move', {
+    axios.put('http://192.168.10.48:3000/api/grinder/move', {
       grinder: this.state.grinder,
     }, {headers:{'Access-Control-Allow-Origin': '*'}, })
       .then(function (response) {
@@ -88,24 +102,37 @@ class NewExtractionForm extends Component {
       { objectID: 'grinder', placeHolder:'Grinder setting', type: 'number'},
       { objectID: 'dose', placeHolder:'Coffee dose', type: 'number'},
       { objectID: 'extractionTime', placeHolder: 'Extraction time', type: 'number'},
+      { objectID: 'weight', placeHolder: 'Extraction weight', type: 'number'},
       { objectID: 'grade', placeHolder: 'Extraction grade', type: 'number'},
       { objectID: 'notes', placeHolder: 'Other notes', type: 'text'},
     ];
-
+    console.log(this.state.isMobile);
     return (
-      <div>
+      <div style={{ paddingLeft: "20px", paddingRight: "20px" }}>
         <Form horizontal onSubmit={this.handleSubmit}>
           { inputs.map(item =>
-              <FormGroup controlId={item.objectID} key={item.objectID}>
+            <span key={item.objectID}>
+              <FormGroup controlId={item.objectID} >
                 <Col componentClass={ControlLabel} sm={2}>
                   {item.placeHolder}:
                 </Col>
-                <Col sm={ item.objectID === 'extracionDate' || item.objectID === 'grinder' ? 2 : 3 }>
+                <Col sm={ item.objectID === 'extractionDate' || item.objectID === 'grinder' ? 3 : 4 }>
                   <FormControl type={item.type} name={item.objectID} value={this.state[item.objectID]} onChange={this.handleChange} placeholder={item.placeHolder}/>
                 </Col>
-                { item.objectID === 'extractionDate' && <Col componentClass={ControlLabel} sm={0}>{moment(this.state.roastDate, "YYYY-MM-DD").fromNow('dd')} old</Col> }
-                { item.objectID === "grinder" && <Button onClick={this.handleGrinderMove}>Move</Button> }
+                { !this.state.isMobile &&
+                  <span>
+                  { item.objectID === 'extractionDate' && <Col componentClass={ControlLabel} sm={0}>{moment(this.state.roastDate, "YYYY-MM-DD").fromNow('dd')} old</Col> }
+                  { item.objectID === "grinder" && <Button onClick={this.handleGrinderMove}>Move</Button> }
+                  </span>
+                }
               </FormGroup>
+              { this.state.isMobile === true &&
+                  <FormGroup>
+                    { item.objectID === 'extractionDate' && <Col componentClass={ControlLabel} sm={1}>{moment(this.state.roastDate, "YYYY-MM-DD").fromNow('dd')} old</Col> }
+                    { item.objectID === "grinder" && <Button style={{marginLeft:"15px"}} onClick={this.handleGrinderMove}>Move</Button> }
+                  </FormGroup>
+              }
+            </span>
           )}
 
           <FormGroup>

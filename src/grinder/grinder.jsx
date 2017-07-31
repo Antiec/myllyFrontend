@@ -19,7 +19,7 @@ class GrinderForm extends Component {
   }
 
   handleSubmit(event) {
-    axios.put('http://localhost:3000/api/grinder/set', {
+    axios.put('http://192.168.10.48:3000/api/grinder/set', {
       grinder: this.state.grinder,
     }, {headers:{'Access-Control-Allow-Origin': '*'}, })
       .then(function (response) {
@@ -33,7 +33,7 @@ class GrinderForm extends Component {
   }
 
   componentDidMount(){
-    axios.get('http://localhost:3000/api/grinder/')
+    axios.get('http://192.168.10.48:3000/api/grinder/')
       .then((response) => {
         this.setState({currentValue: response.data.currentValue, isDataLoaded: true});
         console.log(this.state.data, this.state.isDataLoaded, );
