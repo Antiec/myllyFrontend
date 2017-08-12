@@ -1,6 +1,7 @@
 import React, {Component, fetch} from 'react'
 import axios from 'axios'
 import moment from 'moment'
+import update from 'immutability-helper'
 import {
 	Form, FormGroup, FormControl,
 	Col, ControlLabel, Button, Panel,
@@ -13,9 +14,11 @@ class NewExtractionForm extends Component {
 		let extraction = {
 			coffee: {value: coffee ? coffee : '', placeHolder: 'Coffee name', type: 'text'},
 			roastDate: {value: roastDate ? roastDate : '', placeHolder: 'Roast Date', type: 'date'},
-			grinder: {value: grinder? grinder : '', placeHolder: 'Grinder setting', type: 'number'},
-			dose: {value: dose ? dose : '20.5', placeHolder: 'Coffee dose', type: 'number'},
 			extractionDate: {value: moment().format('YYYY-MM-DD'), placeHolder: 'Extraction Date', type: 'date'},
+			grinder: {value: grinder? grinder : '', placeHolder: 'Grinder setting', type: 'number'},
+			infusion: {value: '', pressure: '', placeHolder: 'Infusion Time', type: 'number'},
+			temperature: {value: '', pressure: '', placeHolder: 'Temperature', type: 'number'},
+			dose: {value: dose ? dose : '20.5', placeHolder: 'Coffee dose', type: 'number'},
 			extractionTime: {value: '', placeHolder: 'Extraction time', type: 'number'},
 			weight: {value: '', placeHolder: 'Extraction weight', type: 'number'},
 			grade: {value: '', placeHolder: 'Extraction grade', type: 'number'},
@@ -34,9 +37,10 @@ class NewExtractionForm extends Component {
 	}
 
 	handleChange(event) {
-		var change = { extraction : {} };
-		change.extraction[event.target.name] = event.target.value;
-		this.setState(change);
+		let newState = update( this.state,
+			{ extraction : {
+		[event.target.name]: { value : {$set: event.target.value } }} });
+		this.setState(newState);
 	}
 
 	updateDimensions() {
@@ -81,32 +85,50 @@ class NewExtractionForm extends Component {
 		return (
 			<div style={{paddingLeft: "20px", paddingRight: "20px"}}>
 				<Form horizontal onSubmit={this.handleSubmit}>
+					<FormGroup controlId="extractionMethodSelect">
+						<Col sm={2} componentClass={ControlLabel}>Method:</Col>
+						<Col sm={4}>
+						<FormControl componentClass="select" placeholder="select">
+							<option value="Espresso">Espresso</option>
+							<option value="AP">AP</option>
+							<option value="V60">V60</option>
+						</FormControl>
+						</Col>
+					</FormGroup>
 					{Object.keys(this.state.extraction).map(key =>
 						<span key={key}>
               <FormGroup controlId={key}>
                 <Col componentClass={ControlLabel} sm={2}>
                   {ext[key].placeHolder}:
                 </Col>
-                <Col sm={key === 'extractionDate' || key === 'grinder' ? 3 : 4}>
-                  <FormControl type={ext[key].type} name={ext[key].objectID} value={ext.roastDate.value}
+                <Col sm={key === 'extractionDate'  || key == 'weight' || key === 'grinder' ? 3 : key === 'infusion' ? 2 : 4}>
+                  <FormControl type={ext[key].type} name={key} value={ext[key].value}
                                onChange={this.handleChange} placeholder={ext[key].placeHolder}/>
                 </Col>
+	              { key === 'infusion' &&
+		              <Col sm={2}>
+			              <FormControl type={ext[key].type} name='infusionPressure' value={ext[key].pressure}
+			                           onChange={this.handleChange} placeholder='Pressure'/>
+		              </Col>
+	              }
 	              {!this.state.isMobile &&
 	              <span>
                   {key === 'extractionDate' &&
-                  <Col componentClass={ControlLabel} sm={0}>{moment(ext.roastDate.value, "YYYY-MM-DD").fromNow('dd')}
-	                  old</Col>}
+                  <Col componentClass={ControlLabel} sm={0}>{moment(ext.roastDate.value, "YYYY-MM-DD").fromNow('dd')} old</Col>}
 		              {key === "grinder" && <Button onClick={this.handleGrinderMove}>Move</Button>}
+		              {key === 'weight' &&
+		              <Col componentClass={ControlLabel} sm={0}>Ratio: {ext.weight.value / ext.dose.value}</Col>}
                   </span>
 	              }
               </FormGroup>
 							{this.state.isMobile === true &&
 							<FormGroup>
 								{key === 'extractionDate' &&
-								<Col componentClass={ControlLabel} sm={1}>{moment(ext[key].value, "YYYY-MM-DD").fromNow('dd')}
-									old</Col>}
+								<Col componentClass={ControlLabel} sm={1}>{moment(ext.roastDate.value, "YYYY-MM-DD").fromNow('dd')} old</Col>}
 								{key === "grinder" &&
 								<Button style={{marginLeft: "15px"}} onClick={this.handleGrinderMove}>Move</Button>}
+								{key === 'weight' &&
+								<Col componentClass={ControlLabel} sm={1}>Ratio: {ext.weight.value / ext.dose.value}</Col>}
 							</FormGroup>
 							}
             </span>
