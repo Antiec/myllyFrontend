@@ -52,8 +52,12 @@ class NewExtractionForm extends Component {
 	}
 
 	handleSubmit(event) {
+		let values = {};
+		Object.keys(this.state.extraction).map(key =>
+			values[key] = this.state.extraction[key].value);
+		console.log( 'Sending object:', values);
 		axios.post('http://192.168.10.48:3000/api/extractions',
-			this.state.extraction,
+			values,
 			{headers: {'Access-Control-Allow-Origin': '*'},})
 			.then(function (response) {
 				console.log(response);
