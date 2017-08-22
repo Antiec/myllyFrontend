@@ -10,14 +10,15 @@ import {
 class NewExtractionForm extends Component {
 	constructor(props) {
 		super(props);
-		const { coffee, roastDate, grinder, dose } = this.props.firstResult;
+		const { coffee, roastDate, grinder, dose, temperature, infusionPressure, infusionTime } = this.props.firstResult;
 		let extraction = {
 			coffee: {value: coffee ? coffee : '', placeHolder: 'Coffee name', type: 'text'},
 			roastDate: {value: roastDate ? roastDate : '', placeHolder: 'Roast Date', type: 'date'},
 			extractionDate: {value: moment().format('YYYY-MM-DD'), placeHolder: 'Extraction Date', type: 'date'},
 			grinder: {value: grinder? grinder : '', placeHolder: 'Grinder setting', type: 'number'},
-			infusion: {value: '', pressure: '', placeHolder: 'Infusion Time', type: 'number'},
-			temperature: {value: '', pressure: '', placeHolder: 'Temperature', type: 'number'},
+			infusionTime: {value: infusionTime ? infusionTime : '', placeHolder: 'Infusion Time', type: 'number'},
+      infusionPressure: {value: infusionPressure ? infusionPressure : '', placeHolder: 'Infusion Pressure', type: 'number'},
+			temperature: {value: temperature ? temperature : '', placeHolder: 'Temperature', type: 'number'},
 			dose: {value: dose ? dose : '20.5', placeHolder: 'Coffee dose', type: 'number'},
 			extractionTime: {value: '', placeHolder: 'Extraction time', type: 'number'},
 			weight: {value: '', placeHolder: 'Extraction weight', type: 'number'},
@@ -56,17 +57,17 @@ class NewExtractionForm extends Component {
 		Object.keys(this.state.extraction).map(key =>
 			values[key] = this.state.extraction[key].value);
 		console.log( 'Sending object:', values);
-		axios.post('http://192.168.10.48:3000/api/extractions',
+		return axios.post('http://192.168.10.48:3000/api/extractions',
 			values,
 			{headers: {'Access-Control-Allow-Origin': '*'},})
 			.then(function (response) {
 				console.log(response);
+
 			})
 			.catch(function (error) {
 				console.log(error);
 			});
 		//alert(`A name was submitted: ${this.state.Coffee}, ${this.state.CoffeeGrinder}, ${this.state.ExtractionTime}`);
-		event.preventDefault();
 	}
 
 	handleGrinderMove(event) {
@@ -109,12 +110,6 @@ class NewExtractionForm extends Component {
                   <FormControl type={ext[key].type} name={key} value={ext[key].value}
                                onChange={this.handleChange} placeholder={ext[key].placeHolder}/>
                 </Col>
-	              { key === 'infusion' &&
-		              <Col sm={2}>
-			              <FormControl type={ext[key].type} name='infusionPressure' value={ext[key].pressure}
-			                           onChange={this.handleChange} placeholder='Pressure'/>
-		              </Col>
-	              }
 	              {!this.state.isMobile &&
 	              <span>
                   {key === 'extractionDate' &&
