@@ -12,6 +12,7 @@ class NewExtractionForm extends Component {
 		super(props);
 		const { coffee, roastDate, grinder, dose, temperature, infusionPressure, infusionTime } = this.props.firstResult;
 		let extraction = {
+			method: {value: method ? method : "Espresso" },
 			coffee: {value: coffee ? coffee : '', placeHolder: 'Coffee name', type: 'text'},
 			roastDate: {value: roastDate ? roastDate : '', placeHolder: 'Roast Date', type: 'date'},
 			extractionDate: {value: moment().format('YYYY-MM-DD'), placeHolder: 'Extraction Date', type: 'date'},
@@ -67,12 +68,13 @@ class NewExtractionForm extends Component {
 			.catch(function (error) {
 				console.log(error);
 			});
+		event.preventDefault;
 		//alert(`A name was submitted: ${this.state.Coffee}, ${this.state.CoffeeGrinder}, ${this.state.ExtractionTime}`);
 	}
 
 	handleGrinderMove(event) {
 		axios.put('http://192.168.10.48:3000/api/grinder/move', {
-			grinder: this.state.grinder,
+			grinder: this.state.extraction.grinder.value,
 		}, {headers: {'Access-Control-Allow-Origin': '*'},})
 			.then(function (response) {
 				console.log(response);
@@ -93,7 +95,7 @@ class NewExtractionForm extends Component {
 					<FormGroup controlId="extractionMethodSelect">
 						<Col sm={2} componentClass={ControlLabel}>Method:</Col>
 						<Col sm={4}>
-						<FormControl componentClass="select" placeholder="select">
+						<FormControl componentClass="select" placeholder="AP" name="method">
 							<option value="Espresso">Espresso</option>
 							<option value="AP">AP</option>
 							<option value="V60">V60</option>
