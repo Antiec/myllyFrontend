@@ -1,11 +1,8 @@
 // @flow
 
 import React, { Component, Fragment } from "react";
-import axios from "axios";
 import moment from "moment";
 import update from "immutability-helper";
-import { connect } from "react-redux";
-import { ExtractionActions } from "../redux/extractions";
 import {
   Form,
   FormGroup,
@@ -87,7 +84,6 @@ class NewExtractionForm extends Component {
     };
 
     this.handleChange = this.handleChange.bind(this);
-    this.handleGrinderMove = this.handleGrinderMove.bind(this);
     this.updateDimensions = this.updateDimensions.bind(this);
   }
 
@@ -120,24 +116,16 @@ class NewExtractionForm extends Component {
     //alert(`A name was submitted: ${this.state.Coffee}, ${this.state.CoffeeGrinder}, ${this.state.ExtractionTime}`);
   };
 
-  handleGrinderMove(event) {
-    axios
-      .put(
-        "http://192.168.10.48:3000/api/grinder/move",
-        {
-          grinder: this.state.extraction.grinder.value
-        },
-        { headers: { "Access-Control-Allow-Origin": "*" } }
-      )
-      .then(function(response) {
-        console.log(response);
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
-    //alert(`A name was submitted: ${this.state.Coffee}, ${this.state.CoffeeGrinder}, ${this.state.ExtractionTime}`);
+  handleGrinderMove = event => {
+    this.props.moveGrinder(this.state.extraction.grinder.value);
     event.preventDefault();
-  }
+  };
+
+  handleMethodChange = event => {
+    this.setState({
+      extraction: { ...this.state.extraction, method: event.target.value }
+    });
+  };
 
   render() {
     console.log(this.state.isMobile);
@@ -155,6 +143,7 @@ class NewExtractionForm extends Component {
                 placeholder="AP"
                 name="method"
                 value={this.state.extraction.method}
+                onChange={this.handleMethodChange}
               >
                 <option value="Espresso">Espresso</option>
                 <option value="AP">AP</option>
@@ -204,7 +193,8 @@ class NewExtractionForm extends Component {
                         )}
                         {key === "weight" && (
                           <Col componentClass={ControlLabel} sm={0}>
-                            Ratio: {ext.weight.value / ext.dose.value}
+                            Ratio:{" "}
+                            {(ext.weight.value / ext.dose.value).toFixed(2)}
                           </Col>
                         )}
                       </span>
@@ -224,8 +214,9 @@ class NewExtractionForm extends Component {
                         <Button
                           style={{ marginLeft: "15px" }}
                           onClick={this.handleGrinderMove}
+                          disabled={this.props.grinderMoving}
                         >
-                          Move
+                          {this.props.grinderMoving ? "Moving" : "Move"}
                         </Button>
                       )}
                       {key === "weight" && (

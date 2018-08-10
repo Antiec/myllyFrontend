@@ -1,29 +1,54 @@
 // @flow
 
 export type GRINDER_STATE = {
-  currentValue: number,
+  grinderMoving: boolean,
   calibrationValue: number
 };
 
 export const actionTypes: { [string]: string } = {
-  CALIBRATE_GRINDER: "CALIBRATE_GRINDER"
+  CALIBRATE_GRINDER: "CALIBRATE_GRINDER",
+  MOVE_GRINDER_STATUS: "MOVE_GRINDER_STATUS"
 };
 
 type calibrateGrinder = {
-  type: actionTypes.calibrateGrinder,
+  type: actionTypes.CALIBRATE_GRINDER,
   value: number
 };
 
-export type Action = calibrateGrinder;
+type moveGrinder = {
+  type: actionTypes.MOVE_GRINDER_STATUS,
+  value: boolean
+};
+
+export type Action = calibrateGrinder | moveGrinder;
 
 export const GrinderActions = {
   calibrateGrinder: value => {
     return async (dispatch: Action => void) => {
-      console.log(value);
       try {
-        await fetch("http://localhost:3000/api/extractions", {
-          method: "POST",
-          body: JSON.stringify(extraction),
+        await fetch("http://localhost:3000/api/move", {
+          method: "PUT",
+          body: JSON.stringify(value),
+          headers: {
+            Accept: "application/json, text/plain, */*",
+            "Content-Type": "application/json",
+            "Cache-Control": "no-cache"
+          }
+        });
+        dispatch({ type: actionTypes.CALIBRATE_GRINDER, value: value });
+      } catch (e) {
+        console.log(e);
+      }
+    };
+  },
+
+  moveGrinder: value => {
+    return async (dispatch: Action => void) => {
+      dispatch({ type: actionTypes.MOVE_GRINDER_STATUS, value: true });
+      try {
+        await fetch("http://localhost:3000/api/grinder/move", {
+          method: "PUT",
+          body: JSON.stringify({ grinder: value }),
           headers: {
             Accept: "application/json, text/plain, */*",
             "Content-Type": "application/json",
@@ -33,12 +58,13 @@ export const GrinderActions = {
       } catch (e) {
         console.log(e);
       }
+      dispatch({ type: actionTypes.MOVE_GRINDER_STATUS, value: false });
     };
   }
 };
 
 const initialState = {
-  currentValue: 0,
+  grinderMoving: false,
   calibratedValue: 0
 };
 
@@ -52,7 +78,11 @@ export default function reducer(
         ...state,
         calibrationValue: action.value
       };
-
+    case actionTypes.MOVE_GRINDER_STATUS:
+      return {
+        ...state,
+        grinderMoving: action.value
+      };
     default:
       return state;
   }

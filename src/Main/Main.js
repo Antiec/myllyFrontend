@@ -6,7 +6,7 @@ import Extractions from '../extractions/extractions';
 import Coffees from '../coffees/coffees';
 import Grinder from '../grinder/grinder';
 
-class App extends Component {
+class Main extends Component {
   render() {
     return (
       <HashRouter>
@@ -53,4 +53,4 @@ const NotFound = () => (
   <div>404: Not Found</div>
 )
 
-export default App
+export default Main

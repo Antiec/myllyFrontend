@@ -6,6 +6,7 @@ import moment from "moment";
 
 import { connect } from "react-redux";
 import { ExtractionActions } from "../redux/extractions";
+import { GrinderActions } from "../redux/grinder";
 
 import NewExtractionForm from "./newextractionform";
 
@@ -59,7 +60,8 @@ class ExtractionsRow extends Component {
         <Collapse in={this.state.detailed}>
           <tr>
             <td>
-              Roast Date:<br /> {item.roastDate}
+              Roast Date:
+              <br /> {item.roastDate}
             </td>
             <td>
               Age: <br />
@@ -126,7 +128,9 @@ class Extractions extends Component {
       extractions,
       isDataLoaded,
       selectedExtraction,
-      addExtraction
+      addExtraction,
+      grinderMoving,
+      moveGrinder
     } = this.props;
     return (
       <div id="extractions">
@@ -136,6 +140,8 @@ class Extractions extends Component {
             <NewExtractionForm
               selectedExtraction={selectedExtraction}
               addExtraction={addExtraction}
+              moveGrinder={moveGrinder}
+              grinderMoving={grinderMoving}
             />
           )}
         {isDataLoaded && extractions ? (
@@ -152,10 +158,12 @@ export default connect(
   state => ({
     extractions: state.extractions.extractions,
     selectedExtraction: state.extractions.selectedExtraction,
-    isDataLoaded: state.extractions.isExtractionsDataLoaded
+    isDataLoaded: state.extractions.isExtractionsDataLoaded,
+    grinderMoving: state.grinder.grinderMoving
   }),
   {
     getExtractions: ExtractionActions.getExtractions,
-    addExtraction: ExtractionActions.addExtraction
+    addExtraction: ExtractionActions.addExtraction,
+    moveGrinder: GrinderActions.moveGrinder
   }
 )(Extractions);
