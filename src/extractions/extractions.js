@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Table, Collapse } from "react-bootstrap";
 
-import axios from "axios";
 import moment from "moment";
 
 import { connect } from "react-redux";
@@ -38,13 +37,11 @@ class ExtractionsRow extends Component {
     this.state = {
       detailed: false
     };
-
-    this.handleClick = this.handleClick.bind(this);
   }
 
-  handleClick() {
+  handleClick = () => {
     this.setState({ detailed: !this.state.detailed });
-  }
+  };
 
   render() {
     const { item } = this.props;
@@ -76,38 +73,24 @@ class ExtractionsRow extends Component {
   }
 }
 
-class ExtractionsTable extends Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    const { data } = this.props;
-
-    return (
-      <div style={{ width: "60%", paddingLeft: "17%" }}>
-        <Table striped condensed bordered hover>
-          <thead>
-            <tr>
-              <th style={{ width: "25%" }}>Coffee Name</th>
-              <th style={{ width: "10%" }}>Grinder</th>
-              <th style={{ width: "10%" }}>Time</th>
-              <th style={{ width: "10%" }}>Weight</th>
-              <th style={{ width: "30%" }}>Grade</th>
-            </tr>
-          </thead>
-          {data.map(item => (
-            <ExtractionsRow
-              key={`${item._id}_row`}
-              keym={item._id}
-              item={item}
-            />
-          ))}
-        </Table>
-      </div>
-    );
-  }
-}
+const ExtractionsTable = props => (
+  <div style={{ width: "60%", paddingLeft: "17%" }}>
+    <Table striped condensed bordered hover>
+      <thead>
+        <tr>
+          <th style={{ width: "25%" }}>Coffee Name</th>
+          <th style={{ width: "10%" }}>Grinder</th>
+          <th style={{ width: "10%" }}>Time</th>
+          <th style={{ width: "10%" }}>Weight</th>
+          <th style={{ width: "30%" }}>Grade</th>
+        </tr>
+      </thead>
+      {props.data.map(item => (
+        <ExtractionsRow key={`${item._id}_row`} keym={item._id} item={item} />
+      ))}
+    </Table>
+  </div>
+);
 
 class Extractions extends Component {
   constructor(props) {

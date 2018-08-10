@@ -9,8 +9,7 @@ import {
   FormControl,
   Col,
   ControlLabel,
-  Button,
-  Panel
+  Button
 } from "react-bootstrap";
 
 class NewExtractionForm extends Component {
@@ -162,7 +161,7 @@ class NewExtractionForm extends Component {
                     <Col
                       sm={
                         key === "extractionDate" ||
-                        key == "weight" ||
+                        key === "weight" ||
                         key === "grinder"
                           ? 3
                           : key === "infusion"

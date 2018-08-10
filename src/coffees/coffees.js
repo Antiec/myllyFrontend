@@ -4,7 +4,6 @@ import { Table } from "react-bootstrap";
 import NewCoffeeForm from "./newcoffeeform";
 
 import { coffeeType } from "../utils/types";
-import thunk from "redux-thunk";
 
 const coffeeList = [
   {
@@ -48,13 +47,27 @@ const coffeeList = [
   }
 ];
 
+const copiedCoffee = {
+  name: "",
+  roaster: "",
+  roast_level: "",
+  roast_date: null,
+  country: "",
+  area: "",
+  mainSpecies: "",
+  secondarySpecies: "",
+  growthHeight: null,
+  processMethod: "",
+  objectID: null
+};
+
 class CoffeesTable extends Component {
   render() {
     const { coffeeList } = this.props;
 
     return (
       <div style={{ width: "60%", paddingLeft: "17%" }}>
-        <NewCoffeeForm />
+        <NewCoffeeForm copiedCoffee={copiedCoffee} />
         <Table striped bordered condensed hover>
           <thead>
             <tr>

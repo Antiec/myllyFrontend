@@ -1,10 +1,10 @@
-import React, { Component } from 'react'
-import { HashRouter, Route, Link, Switch } from 'react-router-dom'
-import { Nav, Navbar, NavItem } from 'react-bootstrap';
-import { IndexLinkContainer } from 'react-router-bootstrap';
-import Extractions from '../extractions/extractions';
-import Coffees from '../coffees/coffees';
-import Grinder from '../grinder/grinder';
+import React, { Component } from "react";
+import { HashRouter, Route, Switch } from "react-router-dom";
+import { Nav, Navbar, NavItem } from "react-bootstrap";
+import { IndexLinkContainer } from "react-router-bootstrap";
+import Extractions from "../extractions/extractions";
+import Coffees from "../coffees/coffees";
+import Grinder from "../grinder/grinder";
 
 class Main extends Component {
   render() {
@@ -12,14 +12,14 @@ class Main extends Component {
       <HashRouter>
         <Container>
           <Switch>
-            <Route exact path='/' component={Extractions} />
-            <Route path='/coffees' component={Coffees} />
-            <Route path='/grinder' component={Grinder} />
+            <Route exact path="/" component={Extractions} />
+            <Route path="/coffees" component={Coffees} />
+            <Route path="/grinder" component={Grinder} />
             <Route component={NotFound} />
           </Switch>
         </Container>
       </HashRouter>
-    )
+    );
   }
 }
 
@@ -27,7 +27,7 @@ const TopNavigation = () => (
   <Navbar>
     <Navbar.Header>
       <Navbar.Brand>
-        <a href="#">Grinder Pagio</a>
+        <a href="/">Grinder Pagio</a>
       </Navbar.Brand>
     </Navbar.Header>
     <Nav>
@@ -42,15 +42,15 @@ const TopNavigation = () => (
       </IndexLinkContainer>
     </Nav>
   </Navbar>
-)
+);
 
-const Container = (props) => <div>
-  <TopNavigation />
-  {props.children}
-</div>
+const Container = props => (
+  <div>
+    <TopNavigation />
+    {props.children}
+  </div>
+);
 
-const NotFound = () => (
-  <div>404: Not Found</div>
-)
+const NotFound = () => <div>404: Not Found</div>;
 
-export default Main
+export default Main;

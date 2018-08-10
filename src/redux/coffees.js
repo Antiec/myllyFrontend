@@ -33,10 +33,10 @@ export default function reducer(
 ): EXTRACTIONS_STATE {
   switch (action.type) {
     case actionTypes.ADD_COFFEE:
-      ({
+      return {
         ...state,
         coffees: [...state.coffees, action.value]
-      });
+      };
     default:
       return state;
   }
